@@ -18,6 +18,9 @@ def project(request):
 def service(request):
     return render(request,'service.html')
 
+def feature(request):
+    return render(request,'feature.html')
+
 def team(request):
     return render(request,'team.html')
 
