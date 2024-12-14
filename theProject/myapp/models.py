@@ -12,5 +12,10 @@ class Projects(models.Model):
         return self.pname
     
 class Services(models.Model):
-    sname=models.CharField(max_length=20,verbose_name="NAme of the Service")
+    sname=models.CharField(max_length=30,verbose_name="Name of the Service")
+    sdesc=models.CharField(max_length=150,verbose_name="Description of the Service")
+    simage=models.ImageField(upload_to="service_image")
+    sprice=models.IntegerField()
     
+    def __str__(self):
+        return self.sname

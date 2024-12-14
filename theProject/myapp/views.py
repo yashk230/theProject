@@ -1,13 +1,14 @@
 from django.conf import settings
 from django.shortcuts import redirect, render
 
-from .models import Projects
+from .models import Projects, Services
 
 
 # Create your views here.
 def index(request):
     context={}
     context['projects']=Projects.objects.all()
+    context['services']=Services.objects.all()
     return render(request,'index.html',context)
 
 def about(request):
