@@ -1,9 +1,10 @@
 from django.contrib import admin
 
 # Register your models here.
-# from .models import Project
+from .models import Projects
 
 
-# class ProjectAdmin(admin.ModelAdmin):
-#     list_display=['pimage','pname','desc']
-# admin.site.register(Project,ProjectAdmin)
+class ProjectAdmin(admin.ModelAdmin):
+    list_display=['pname','pdesc','pimage','price']
+
+admin.site.register(Projects,ProjectAdmin)
