@@ -19,3 +19,11 @@ class Services(models.Model):
     
     def __str__(self):
         return self.sname
+    
+class Team(models.Model):
+    name=models.CharField(max_length=50,verbose_name="Team Member Name")
+    designation=models.CharField(max_length=50,verbose_name="Designation")
+    image=models.ImageField(upload_to="team_member")
+    
+    def __str__(self):
+        return self.name
