@@ -23,10 +23,20 @@ def project(request):
     context['projects']=Projects.objects.all()
     return render(request,'project.html',context)
 
+def project_info(request,pid):
+    context={}
+    context['projects']=Projects.objects.filter(id=int(pid))
+    return render(request,'project-info.html',context)
+
 def service(request):
     context={}
     context['services']=Services.objects.all()
     return render(request,'service.html',context)
+
+def service_info(request,sid):
+    context={}
+    context['services']=Services.objects.filter(id=int(sid))
+    return render(request,'service-info.html',context)
 
 def feature(request):
     return render(request,'feature.html')

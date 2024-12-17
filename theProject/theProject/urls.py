@@ -26,10 +26,12 @@ urlpatterns = [
     path('about/',views.about),
     path('contact/',views.contact),
     path('project/',views.project),
+    path('project_info/<pid>/',views.project_info),
     path('team/',views.team),
     path('feature/',views.feature),
     path('testimonial/',views.testimonial),
     path('service/',views.service),
+    path('service_info/<sid>/',views.service_info),
     path('quote/',views.quote),
 ]
 urlpatterns+= static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
