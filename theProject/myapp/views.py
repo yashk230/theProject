@@ -19,10 +19,14 @@ def contact(request):
     return render(request,'contact.html')
 
 def project(request):
-    return render(request,'project.html')
+    context={}
+    context['projects']=Projects.objects.all()
+    return render(request,'project.html',context)
 
 def service(request):
-    return render(request,'service.html')
+    context={}
+    context['services']=Services.objects.all()
+    return render(request,'service.html',context)
 
 def feature(request):
     return render(request,'feature.html')
