@@ -244,7 +244,7 @@
 }
 
 .page-header {
-    background: linear-gradient(rgba(53, 53, 53, .7), rgba(53, 53, 53, .7)), url(..staticstatic/img/carousel-1.jpg) center center no-repeat;
+    background: linear-gradient(rgba(53, 53, 53, .7), rgba(53, 53, 53, .7)), url(../img/carousel-1.jpg) center center no-repeat;
     background-size: cover;
 }
 
@@ -422,6 +422,14 @@
 
 
 /*** Team ***/
+#container-div {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;    /* Centers vertically */
+    height: 100vh;          /* Full viewport height */
+}
+
+
 .team-item img {
     transition: .5s;
 }
