@@ -30,7 +30,7 @@
                 {% for projects in projects %}
                 <div class="col-lg-6 ps-lg-0" style="min-height: 400px;">
                     <div class="position-relative h-100">
-                        <img class="position-absolute img-fluid w-100 h-100" src="{{projects.pimage.url}}" style="object-fit: cover;" alt="">
+                        <img class="position-absolute img-fluid w-80 h-100" src="{{projects.pimage.url}}" style="object-fit: cover;" alt="">
                     </div>
                 </div>
                 <div class="col-lg-6 about-text py-5 wow fadeIn" data-wow-delay="0.5s">
@@ -40,6 +40,47 @@
                             <h1 class="display-5 mb-4">{{projects.pname}}</h1>
                         </div>
                         <p class="mb-4 pb-2">{{projects.pdesc}}</p>
+
+                        <h1 class="display-10">Project Requirments</h1>
+                        <table class="custom-table">
+                            <tr>
+                                <th>Project Name</th>
+                                <td>{{projects.pname}}</td>
+                            </tr>
+                            <tr>
+                                <th>Language Used</th>
+                                <td>{{projects.language}}</td>
+                            </tr>
+                            <tr>
+                                <th>Framework</th>
+                                <td>{{projects.framework}}</td>
+                            </tr>
+                            <tr>
+                                <th>Database</th>
+                                <td>{{projects.database}}</td>
+                            </tr>
+                            <tr>
+                                <th>UserInterface</th>
+                                <td>{{projects.userinterface}}</td>
+                            </tr>
+                            <tr>
+                                <th>Web Browser</th>
+                                <td>{{projects.webbrowser}}</td>
+                            </tr>
+                            <tr>
+                                <th>IDE</th>
+                                <td>{{projects.ide}}</td>
+                            </tr>
+                            
+                        </table>
+                    </div>
+                    
+                </div>
+                {% endfor %}
+                {% for images in project_images %}
+                <div class="col-lg-6 ps-lg-0" style="min-height: 400px;">
+                    <div class="position-relative h-100">
+                        <img class="position-absolute img-fluid w-80 h-100" src="{{images.image.url}}" style="object-fit: cover;" alt="">
                     </div>
                 </div>
                 {% endfor %}

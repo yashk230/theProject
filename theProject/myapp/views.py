@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.shortcuts import redirect, render
 
-from .models import Projects, Services, Team
+from .models import ProjectImage, Projects, Services, Team
 
 
 # Create your views here.
@@ -26,6 +26,7 @@ def project(request):
 def project_info(request,pid):
     context={}
     context['projects']=Projects.objects.filter(id=int(pid))
+    context['project_images']=ProjectImage.objects.filter(project=int(pid))
     return render(request,'project-info.html',context)
 
 def service(request):
