@@ -12,6 +12,7 @@ class Projects(models.Model):
     webbrowser=models.CharField(null=True,max_length=50,verbose_name="Web Browser")
     ide=models.CharField(null=True,max_length=50,verbose_name="IDE Used")
     pimage=models.ImageField(null=True, blank=True,upload_to="project_images")
+    pfile=models.FileField(null=True, blank=True,upload_to="project_files")
     price=models.IntegerField()
     
     

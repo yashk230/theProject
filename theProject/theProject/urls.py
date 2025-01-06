@@ -27,6 +27,7 @@ urlpatterns = [
     path('contact/',views.contact),
     path('project/',views.project),
     path('project_info/<pid>/',views.project_info),
+    path('download/<int:project_id>/', views.download_folder, name='download_folder'),
     path('team/',views.team),
     path('feature/',views.feature),
     path('testimonial/',views.testimonial),

@@ -1,5 +1,6 @@
 from django.conf import settings
-from django.shortcuts import redirect, render
+from django.http import FileResponse
+from django.shortcuts import get_object_or_404, redirect, render
 
 from .models import ProjectImage, Projects, Services, Team
 
@@ -28,6 +29,14 @@ def project_info(request,pid):
     context['projects']=Projects.objects.filter(id=int(pid))
     context['project_images']=ProjectImage.objects.filter(project=int(pid))
     return render(request,'project-info.html',context)
+
+def download_folder(request, project_id):
+    project = get_object_or_404(Projects, id=project_id)
+    file_path = project.pfile.path
+    
+    response = FileResponse(open(file_path, 'rb'))
+    response['Content-Disposition'] = f'attachment; filename="{project.pfile.name}"'
+    return response
 
 def service(request):
     context={}

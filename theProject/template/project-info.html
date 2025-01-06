@@ -73,10 +73,17 @@
                             </tr>
                             
                         </table>
-                    </div>
-                    
+
+                            {% if projects.pfile %}
+                                <a href="{% url 'download_folder' projects.id %}">Download Folder</a>
+                            {% else %}
+                                No Folder Available
+                            {% endif %}
+
+                        {% endfor %}
                 </div>
-                {% endfor %}
+            </div>
+
                 {% for images in project_images %}
                 <div class="col-lg-6 ps-lg-0" style="min-height: 400px;">
                     <div class="position-relative h-100">
