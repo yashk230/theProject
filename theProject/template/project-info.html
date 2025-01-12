@@ -75,7 +75,7 @@
                         </table>
 
                             {% if projects.pfile %}
-                                <a href="{% url 'download_folder' projects.id %}">Download Folder</a>
+                                <a href="{% url 'project_folder' projects.id %}">Download Folder</a>
                             {% else %}
                                 No Folder Available
                             {% endif %}

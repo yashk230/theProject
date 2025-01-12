@@ -32,20 +32,21 @@
                 <div class="col-12 text-center">
                     <ul class="list-inline mb-5" id="portfolio-flters">
                         <li class="mx-2 active" data-filter="*">All</li>
-                        <li class="mx-2" data-filter=".first">General Carpentry</li>
-                        <li class="mx-2" data-filter=".second">Custom Carpentry</li>
+                        <li class="mx-2" data-filter=".first">Frontend projects</li>
+                        <li class="mx-2" data-filter=".second">Backend projects</li>
                     </ul>
                 </div>
             </div>
+            
             <div class="row g-4 portfolio-container">
                 {% for projects in projects %}
-                <div class="col-lg-4 col-md-6 portfolio-item first wow fadeInUp" data-wow-delay="0.1s">
+                <div class="col-lg-4 col-md-6 portfolio-item {% if projects.ptype == 'Frontend' %}first{% elif projects.ptype == 'Backend' %}second{% endif %} wow fadeInUp" data-wow-delay="0.1s">
                     <div class="rounded overflow-hidden">
                         <div class="position-relative overflow-hidden">
                             <img class="img-fluid w-100" src="{{projects.pimage.url}}" alt="">
                             <div class="portfolio-overlay">
                                 <a class="btn btn-square btn-outline-light mx-1" href="{{projects.pimage.url}}" data-lightbox="portfolio"><i class="fa fa-eye"></i></a>
-                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
+                                <a class="btn btn-square btn-outline-light mx-1" href="/project_info/{{projects.id}}"><i class="fa fa-link"></i></a>
                             </div>
                         </div>
                         <div class="border border-5 border-light border-top-0 p-4">
@@ -56,13 +57,15 @@
                     </div>
                 </div>
                 {% endfor %}
+                
             </div>
+
         </div>
     </div>
     <!-- Projects End -->
         
-
+    {% include "qquote.html" %}
     {% include "footer.html" %}
-</body>
 
+</body>
 </html>

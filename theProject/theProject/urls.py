@@ -27,12 +27,13 @@ urlpatterns = [
     path('contact/',views.contact),
     path('project/',views.project),
     path('project_info/<pid>/',views.project_info),
-    path('download/<int:project_id>/', views.download_folder, name='download_folder'),
+    path('download/<int:project_id>/', views.project_folder, name='project_folder'),
     path('team/',views.team),
     path('feature/',views.feature),
     path('testimonial/',views.testimonial),
     path('service/',views.service),
     path('service_info/<sid>/',views.service_info),
+    path('downloads/<int:service_id>/', views.service_folder, name='service_folder'),
     path('quote/',views.quote),
 ]
 urlpatterns+= static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
