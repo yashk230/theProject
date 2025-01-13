@@ -35,5 +35,10 @@ urlpatterns = [
     path('service_info/<sid>/',views.service_info),
     path('downloads/<int:service_id>/', views.service_folder, name='service_folder'),
     path('quote/',views.quote),
+    path('initiate_payment/<pid>',views.project_initiate_payment),
+    path('cart/<pid>',views.cart),
+    path('remove/<rid>',views.remove),
+    path('updateqty/<x>/<uid>/',views.updateqty),
+
 ]
 urlpatterns+= static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

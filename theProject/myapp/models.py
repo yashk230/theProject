@@ -42,3 +42,9 @@ class Team(models.Model):
     
     def __str__(self):
         return self.name
+    
+class Cart(models.Model):
+    project=models.ForeignKey(Projects,on_delete=models.CASCADE)
+    quantity=models.IntegerField(null=True,blank=True)
+    total=models.IntegerField(null=True,blank=True)
+    

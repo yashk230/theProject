@@ -42,7 +42,7 @@
                         <p class="mb-4 pb-2">{{projects.pdesc}}</p>
 
                         <h1 class="display-10">Project Requirments</h1>
-                        <table class="custom-table">
+                        <table class="custom-table mb-4">
                             <tr>
                                 <th>Project Name</th>
                                 <td>{{projects.pname}}</td>
@@ -74,12 +74,10 @@
                             
                         </table>
 
-                            {% if projects.pfile %}
-                                <a href="{% url 'project_folder' projects.id %}">Download Folder</a>
-                            {% else %}
-                                No Folder Available
-                            {% endif %}
-
+                        
+                        <a href="/initiate_payment/{{projects.id}}">Pay and Download {{projects.pname}} in 500 Rs</a>
+                        <button class="btn btn-primary w-100 py-3 mt-5" type="submit" onclick="window.location.href='/cart/{{projects.id}}'">Add to cart</button>
+                        
                         {% endfor %}
                 </div>
             </div>
