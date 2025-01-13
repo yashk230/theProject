@@ -1,3 +1,4 @@
+import razorpay
 from django.conf import settings
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -32,10 +33,26 @@ def project_info(request,pid):
     context['project_images']=ProjectImage.objects.filter(project=int(pid))
     return render(request,'project-info.html',context)
 
-def project_initiate_payment(request,pid):
+def initiate_payment(request,pid):
     context={}
     context['projects']=Projects.objects.filter(id=int(pid))
     return render(request, 'initiate_payment.html',context)
+
+def payment(request):
+    if request.method == "POST":
+        amount = float(request.POST['total_price']) * 100  # Convert to paise
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+        payment = client.order.create({'amount': amount, 'currency': 'INR', 'payment_capture': '1'})
+        
+        context = {
+            # 'order': order,
+            'payment': payment,
+            'razorpay_key_id': settings.RAZORPAY_KEY_ID
+            
+        }
+        return render(request, 'initiate_payment.html', context)
+    return render(request, 'payments.html')
+
 
 def project_folder(request, project_id):
     project = get_object_or_404(Projects, id=project_id)
