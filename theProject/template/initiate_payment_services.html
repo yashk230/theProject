@@ -14,21 +14,7 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a class="text-white" href="/">Home</a></li>
                     <li class="breadcrumb-item text-white active" aria-current="page"><a class="text-white" href="/project">Projects</a></li>
-                    <li class="breadcrumb-item text-white active" aria-current="page"><a class="text-white" href="/content_details/{{projects.id}}">{{projects.pname}}</a></li>
-                    <li class="breadcrumb-item text-white active" aria-current="page">Make Payment</li>
-                </ol>
-            </nav>
-        </div>
-        {% endfor %}
-
-        {% for services in services %}
-        <div class="container py-5">
-            <h1 class="display-3 text-white mb-3 animated slideInDown">Services</h1>
-            <nav aria-label="breadcrumb animated slideInDown">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a class="text-white" href="/">Home</a></li>
-                    <li class="breadcrumb-item text-white active" aria-current="page"><a class="text-white" href="/services">Services</a></li>
-                    <li class="breadcrumb-item text-white active" aria-current="page"><a class="text-white" href="/content_details/{{services.id}}">{{projects.pname}}</a></li>
+                    <li class="breadcrumb-item text-white active" aria-current="page"><a class="text-white" href="/project_info/{{projects.id}}">{{projects.pname}}</a></li>
                     <li class="breadcrumb-item text-white active" aria-current="page">Make Payment</li>
                 </ol>
             </nav>
@@ -58,29 +44,6 @@
                         <p id="quantity-message" style="color: red; display: none;">Minimum quantity should be 1</p>
                         <p>Total price: ₹<span id="total">{{projects.price}}</span></p>
                         <input type="hidden" id="total_price" name="total_price" value="{{projects.price}}">
-                        <button type="submit" class="btn btn-primary">Pay</button>
-                    </form>
-                {% endfor %}
-
-                {% for services in services %}
-                <div class="col-lg-3 ps-lg-0" style="min-height: 400px;">
-                    <div class="position-relative h-100">
-                        <img class="position-absolute img-fluid w-80 h-50 mt-3" src="{{services.simage.url}}" style="object-fit: cover;" alt="">
-                    </div>
-                </div>
-
-                <div class="col-lg-3 py-5 wow fadeIn" data-wow-delay="0.5s">
-                    <div class="text-start">
-                        <h1 class=" mb-4">{{services.sname}}</h1>
-                    </div>
-                    <form method="POST" action="{% url 'initiate_payment' pid=services.id %}">
-                        {% csrf_token %}
-                        <p>Price per unit: ₹<span id="price">{{services.sprice}}</span></p>
-                        <label for="quantity">Quantity:</label>
-                        <input type="number" id="quantity" value="1" min="1" oninput="updatePrice()">
-                        <p id="quantity-message" style="color: red; display: none;">Minimum quantity should be 1</p>
-                        <p>Total price: ₹<span id="total">{{services.sprice}}</span></p>
-                        <input type="hidden" id="total_price" name="total_price" value="{{services.sprice}}">
                         <button type="submit" class="btn btn-primary">Pay</button>
                     </form>
                 {% endfor %}

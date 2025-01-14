@@ -39,8 +39,12 @@
                             <h1 class="display-5 mb-4">{{services.sname}}</h1>
                         </div>
                         <p class="mb-4 pb-2">{{services.sdesc}}</p>
-                        {% if services.sfile %}
-                            <a href="{% url 'service_folder' services.id %}">Download Folder</a>
+
+                        {% if order.paid %}
+                            <a href="{% url 'service_folder' services.id %}" onclick="downloadAndRefresh(this); return false;">Download Folder</a>
+                        {% else %}
+                            <a href="/initiate_payment_services/{{services.id}}">Pay and Download {{services.sname}} in {{services.sprice}}Rs</a>
+                            <button class="btn btn-primary w-100 py-3 mt-5" type="submit" onclick="window.location.href='/cart/{{services.id}}'">Add to cart</button>
                         {% endif %}
                     </div>
                 </div>

@@ -48,3 +48,12 @@ class Cart(models.Model):
     quantity=models.IntegerField(null=True,blank=True)
     total=models.IntegerField(null=True,blank=True)
     
+class Money(models.Model):
+    project_id=models.ForeignKey(Projects,on_delete=models.CASCADE,verbose_name="Project ID",blank=True, null=True)
+    service_id=models.ForeignKey(Services,on_delete=models.CASCADE,verbose_name="Project ID",blank=True, null=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    razorpay_order_id = models.CharField(max_length=100, blank=True, null=True)
+    razorpay_payment_id = models.CharField(max_length=100, blank=True, null=True)
+    razorpay_signature = models.CharField(max_length=100, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    paid = models.BooleanField(default=False)
