@@ -146,38 +146,57 @@ def payment(request):
             return HttpResponse("Order not found", status=404)
     return redirect('initiate_payment')
 
-
-
 def cart(request,pid):
     context={}
     context['projects']=Projects.objects.filter(id=int(pid))
     context['services']=Services.objects.filter(id=int(pid))
     if Projects.objects.filter(id=int(pid)):
-        destionation=Cart.objects.create(project_id=int(pid),quantity=1,total=Projects.objects.get(id=int(pid)).price)
-        destionation.save()
+        if Cart.objects.filter(project_id=int(pid)):
+            context["msg"]="Item already added to cart"
+        else:
+            destionation=Cart.objects.create(project_id=int(pid),quantity=1,total=Projects.objects.get(id=int(pid)).price)
+            destionation.save()
     elif Services.objects.filter(id=int(pid)):
-        destination = Cart.objects.create(services_id=int(pid), quantity=1, total=Services.objects.get(id=int(pid)).sprice)
-        destination.save()
+        if Cart.objects.filter(services_id=int(pid)):
+            context["msg"]="Item already added to cart"
+        else:
+            destination = Cart.objects.create(services_id=int(pid), quantity=1, total=Services.objects.get(id=int(pid)).sprice)
+            destination.save()
     else:
         context["msg"]="Something went wrong"
-    context['cart']=Cart.objects.filter(project_id=int(pid))
-    context['services_cart']=Cart.objects.filter(services_id=int(pid))
+    context['cart']=Cart.objects.all()
+    # context['cart']=Cart.objects.filter(project_id=int(pid))
+    # context['services_cart']=Cart.objects.filter(services_id=int(pid))
     return render(request,'cart.html',context)
 
 def updateqty(request,x,uid):
     context={}
     c=Cart.objects.filter(id=uid)
-    p=Projects.objects.filter(id=x)
-    p=p.price
-    q=c[0].quantity
-    if x=="1":
-        q=q+1
-        
-    elif q>1:
-        q=q-1
-        
-    c.update(quantity=q)
-    context['cart']=c
+    for c in c:
+        if Projects.objects.filter(id=c.project_id):
+            price=c.project.price
+            if x == "1":
+                c.quantity += 1
+                final=price*c.quantity
+                c.total=final
+                print("final price",final)
+            elif c.quantity > 1:
+                c.quantity -= 1
+                final=price*c.quantity
+                c.total=final
+        else:
+            price=c.services.sprice
+            if x == "1":
+                c.quantity += 1
+                final=price*c.quantity
+                c.total=final
+                print("final price",final)
+            elif c.quantity > 1:
+                c.quantity -= 1
+                final=price*c.quantity
+                c.total=final
+    c.save()
+    context['cart']=Cart.objects.all()
     return render(request,'cart.html',context)
 
 def remove(request,rid):
@@ -185,8 +204,7 @@ def remove(request,rid):
     c=Cart.objects.filter(id=rid)
     c.delete()
     context["msg"]="Item removed successfully"
-    c=Cart.objects.filter(userid=request.user.id)
-    context['cart']=c
+    context['cart']=Cart.objects.all()
     # print(c)
     return render(request,'cart.html',context)
 
