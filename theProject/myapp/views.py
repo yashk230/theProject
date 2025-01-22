@@ -5,8 +5,22 @@ from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
 
 from .models import Cart, Money, ProjectImage, Projects, Services, Team
 
-
 # Create your views here.
+
+def feature(request):
+    return render(request,'feature.html')
+
+def team(request):
+    context={}
+    context['team']=Team.objects.all()
+    return render(request,'team.html',context)
+
+def quote(request):
+    return render(request,'quote.html')
+
+def testimonial(request):
+    return render(request,'testimonial.html')
+
 def index(request):
     context={}
     context['projects']=Projects.objects.all()
@@ -134,6 +148,37 @@ def payment(request):
 
 
 
+def cart(request,pid):
+    context={}
+    context['projects']=Projects.objects.filter(id=int(pid))
+    context['services']=Services.objects.filter(id=int(pid))
+    if Projects.objects.filter(id=int(pid)):
+        destionation=Cart.objects.create(project_id=int(pid),quantity=1,total=Projects.objects.get(id=int(pid)).price)
+        destionation.save()
+    elif Services.objects.filter(id=int(pid)):
+        destination = Cart.objects.create(services_id=int(pid), quantity=1, total=Services.objects.get(id=int(pid)).sprice)
+        destination.save()
+    else:
+        context["msg"]="Something went wrong"
+    context['cart']=Cart.objects.filter(project_id=int(pid))
+    context['services_cart']=Cart.objects.filter(services_id=int(pid))
+    return render(request,'cart.html',context)
+
+def updateqty(request,x,uid):
+    context={}
+    c=Cart.objects.filter(id=uid)
+    p=Projects.objects.filter(id=x)
+    p=p.price
+    q=c[0].quantity
+    if x=="1":
+        q=q+1
+        
+    elif q>1:
+        q=q-1
+        
+    c.update(quantity=q)
+    context['cart']=c
+    return render(request,'cart.html',context)
 
 def remove(request,rid):
     context={}
@@ -144,19 +189,6 @@ def remove(request,rid):
     context['cart']=c
     # print(c)
     return render(request,'cart.html',context)
-
-def updateqty(request,x,uid):
-    c=Cart.objects.filter(id=uid)
-    p=Projects.objects.filter(id=x)
-    # p=p.price
-    q=c[0].quantity
-    if x=="1":
-        q=q+1
-    elif q>1:
-        q=q-1
-    c.update(quantity=q)
-    return render(request,'cart.html')
-
 
 def view_cart(request):
     context={}
@@ -175,25 +207,4 @@ def view_cart(request):
     else:
         return redirect('/login')
     
-def cart(request,pid):
-    context={}
-    context['projects']=Projects.objects.filter(id=int(pid))
-    destionation=Cart.objects.create(project_id=int(pid),quantity=1,total=Projects.objects.get(id=int(pid)).price)
-    destionation.save()
-    context['cart']=Cart.objects.filter(project_id=int(pid))
-    return render(request,'cart.html',context)
 
-
-def feature(request):
-    return render(request,'feature.html')
-
-def team(request):
-    context={}
-    context['team']=Team.objects.all()
-    return render(request,'team.html',context)
-
-def quote(request):
-    return render(request,'quote.html')
-
-def testimonial(request):
-    return render(request,'testimonial.html')

@@ -44,7 +44,8 @@ class Team(models.Model):
         return self.name
     
 class Cart(models.Model):
-    project=models.ForeignKey(Projects,on_delete=models.CASCADE)
+    project=models.ForeignKey(Projects,on_delete=models.CASCADE,null=True,blank=True)
+    services=models.ForeignKey(Services,on_delete=models.CASCADE,null=True,blank=True)
     quantity=models.IntegerField(null=True,blank=True)
     total=models.IntegerField(null=True,blank=True)
     
