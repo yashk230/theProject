@@ -1,9 +1,11 @@
+
 import razorpay
 from django.conf import settings
 from django.http import FileResponse
 from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
 
 from .models import Cart, Money, ProjectImage, Projects, Services, Team
+from .utils import cleanup_expired_cart_items
 
 # Create your views here.
 
@@ -21,7 +23,9 @@ def quote(request):
 def testimonial(request):
     return render(request,'testimonial.html')
 
+
 def index(request):
+    cleanup_expired_cart_items()
     context={}
     context['projects']=Projects.objects.all()
     context['services']=Services.objects.all()
@@ -150,23 +154,25 @@ def cart(request,pid):
     context={}
     context['projects']=Projects.objects.filter(id=int(pid))
     context['services']=Services.objects.filter(id=int(pid))
+    if not request.session.session_key:
+        request.session.create()
+    session_key = request.session.session_key
+    
     if Projects.objects.filter(id=int(pid)):
         if Cart.objects.filter(project_id=int(pid)):
             context["msg"]="Item already added to cart"
         else:
-            destionation=Cart.objects.create(project_id=int(pid),quantity=1,total=Projects.objects.get(id=int(pid)).price)
+            destionation=Cart.objects.create(project_id=int(pid),quantity=1,total=Projects.objects.get(id=int(pid)).price,session_key=session_key)
             destionation.save()
     elif Services.objects.filter(id=int(pid)):
         if Cart.objects.filter(services_id=int(pid)):
             context["msg"]="Item already added to cart"
         else:
-            destination = Cart.objects.create(services_id=int(pid), quantity=1, total=Services.objects.get(id=int(pid)).sprice)
+            destination = Cart.objects.create(services_id=int(pid), quantity=1, total=Services.objects.get(id=int(pid)).sprice,session_key=session_key)
             destination.save()
     else:
         context["msg"]="Something went wrong"
     context['cart']=Cart.objects.all()
-    # context['cart']=Cart.objects.filter(project_id=int(pid))
-    # context['services_cart']=Cart.objects.filter(services_id=int(pid))
     return render(request,'cart.html',context)
 
 def updateqty(request,x,uid):
@@ -184,6 +190,7 @@ def updateqty(request,x,uid):
                 c.quantity -= 1
                 final=price*c.quantity
                 c.total=final
+                c.save()
         else:
             price=c.services.sprice
             if x == "1":
@@ -195,7 +202,7 @@ def updateqty(request,x,uid):
                 c.quantity -= 1
                 final=price*c.quantity
                 c.total=final
-    c.save()
+                c.save()
     context['cart']=Cart.objects.all()
     return render(request,'cart.html',context)
 

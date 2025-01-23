@@ -41,7 +41,6 @@ urlpatterns = [
     path('payments/',views.payment,name="payments"),
     path('cart/<pid>',views.cart),
     path('remove/<rid>',views.remove),
-    path('updateqty/<x>/<uid>/',views.updateqty),
-
+    path('updateqty/<x>/<uid>/',views.updateqty)
 ]
 urlpatterns+= static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

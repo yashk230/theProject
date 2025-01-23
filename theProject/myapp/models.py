@@ -44,10 +44,12 @@ class Team(models.Model):
         return self.name
     
 class Cart(models.Model):
+    session_key = models.CharField(max_length=255)
     project=models.ForeignKey(Projects,on_delete=models.CASCADE,null=True,blank=True)
     services=models.ForeignKey(Services,on_delete=models.CASCADE,null=True,blank=True)
     quantity=models.IntegerField(null=True,blank=True)
     total=models.IntegerField(null=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     
 class Money(models.Model):
     project_id=models.ForeignKey(Projects,on_delete=models.CASCADE,verbose_name="Project ID",blank=True, null=True)
