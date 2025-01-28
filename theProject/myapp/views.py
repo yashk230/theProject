@@ -1,13 +1,20 @@
 
 import razorpay
 from django.conf import settings
+from django.db.models import Sum
 from django.http import FileResponse
 from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
 
 from .models import Cart, Money, ProjectImage, Projects, Services, Team
 from .utils import cleanup_expired_cart_items
 
+
 # Create your views here.
+def all(request):
+    context={}
+    context['projects']=Projects.objects.all()
+    context['services']=Services.objects.all()
+    return render(request,'all.html',context)
 
 def feature(request):
     return render(request,'feature.html')
@@ -23,7 +30,6 @@ def quote(request):
 def testimonial(request):
     return render(request,'testimonial.html')
 
-
 def index(request):
     cleanup_expired_cart_items()
     context={}
@@ -31,7 +37,6 @@ def index(request):
     context['services']=Services.objects.all()
     context['team']=Team.objects.all()
     return render(request,'index.html',context)
-
 
 def content_details(request,cid):
     print("cid is ",cid)
@@ -66,7 +71,6 @@ def project(request):
     context={}
     context['projects']=Projects.objects.all()
     return render(request,'project.html',context)
-
 
 def project_folder(request, project_id):
     project = get_object_or_404(Projects, id=project_id)
@@ -124,7 +128,6 @@ def initiate_payment(request,pid):
         return render(request, 'payments.html', context)
     return render(request, 'initiate_payment.html',context)
 
-
 def payment(request):
     if request.method == "POST":
         razorpay_order_id = request.POST.get('razorpay_order_id')
@@ -172,11 +175,18 @@ def cart(request,pid):
             destination.save()
     else:
         context["msg"]="Something went wrong"
-    context['cart']=Cart.objects.all()
+        
+    
+    
+    context['items']="Add something more to your cart"
+    total_amount=Cart.objects.filter(session_key=session_key).aggregate(Sum('total'))
+    context['total_amount']=total_amount if total_amount['total__sum'] else 0
+    context['cart']=Cart.objects.filter(session_key=request.session.session_key)
     return render(request,'cart.html',context)
 
 def updateqty(request,x,uid):
     context={}
+    session_key = request.session.session_key
     c=Cart.objects.filter(id=uid)
     for c in c:
         if Projects.objects.filter(id=c.project_id):
@@ -190,7 +200,6 @@ def updateqty(request,x,uid):
                 c.quantity -= 1
                 final=price*c.quantity
                 c.total=final
-                c.save()
         else:
             price=c.services.sprice
             if x == "1":
@@ -202,7 +211,9 @@ def updateqty(request,x,uid):
                 c.quantity -= 1
                 final=price*c.quantity
                 c.total=final
-                c.save()
+        c.save()
+    total_amount=Cart.objects.filter(session_key=session_key).aggregate(Sum('total'))
+    context['total_amount']=total_amount if total_amount['total__sum'] else 0
     context['cart']=Cart.objects.all()
     return render(request,'cart.html',context)
 
@@ -210,26 +221,91 @@ def remove(request,rid):
     context={}
     c=Cart.objects.filter(id=rid)
     c.delete()
-    context["msg"]="Item removed successfully"
-    context['cart']=Cart.objects.all()
-    # print(c)
+    context['msg']='Item removed successfully!!'
+    cart_items = Cart.objects.filter(session_key=request.session.session_key)
+    
+    if cart_items:
+        context['cart'] = cart_items
+    else:
+        context['empty_cart'] = 'Your cart is empty!!'
     return render(request,'cart.html',context)
 
 def view_cart(request):
-    context={}
-    if request.user.is_authenticated:
-        c=Cart.objects.filter(userid=request.user.id)
-        context['cart']=c
-        totalqty=0
-        totalprice=0
-        for i in c:
-            totalqty=totalqty+i.qty
-            totalprice=totalprice+i.qty*i.pid.price
-        print(totalqty)
-        context["totalprice"]=totalprice
-        context["items"]=totalqty
-        return render(request,'view_cart.html',context)
-    else:
-        return redirect('/login')
+    context = {}
     
+    session_key = request.session.session_key
+    cart_items_exist = Cart.objects.filter(session_key=session_key).exists()
+    
+    if cart_items_exist:
+        context['cart'] = Cart.objects.filter(session_key=session_key)
+    else:
+        context['empty_cart'] = 'Your cart is empty!!'
+        context['item']="Add something to your cart"
+        
+    total_amount = Cart.objects.filter(session_key=session_key).aggregate(Sum('total'))['total__sum']
+    context['total_amount'] = total_amount if total_amount else 0
+    
+    return render(request, 'cart.html', context)
 
+def cart_operations(request, action=None, pid=None, uid=None, x=None):
+#     context = {}
+#     session_key = request.session.session_key
+#     if not session_key:
+#         request.session.create()
+#         session_key = request.session.session_key
+
+#     if action == 'add':
+#         if pid:
+#             context['projects'] = Projects.objects.filter(id=int(pid))
+#             context['services'] = Services.objects.filter(id=int(pid))
+            
+#             project_exists = Projects.objects.filter(id=int(pid)).exists()
+#             service_exists = Services.objects.filter(id=int(pid)).exists()
+            
+#             if project_exists:
+#                 if Cart.objects.filter(project_id=int(pid), session_key=session_key).exists():
+#                     context["msg"] = "Item already added to cart"
+#                 else:
+#                     Cart.objects.create(project_id=int(pid), quantity=1, total=Projects.objects.get(id=int(pid)).price, session_key=session_key)
+#                     context["msg"] = "Item added to cart"
+#             elif service_exists:
+#                 if Cart.objects.filter(services_id=int(pid), session_key=session_key).exists():
+#                     context["msg"] = "Item already added to cart"
+#                 else:
+#                     Cart.objects.create(services_id=int(pid), quantity=1, total=Services.objects.get(id=int(pid)).sprice, session_key=session_key)
+#                     context["msg"] = "Item added to cart"
+#             else:
+#                 context["msg"] = "Item not found"
+    
+#     elif action == 'update':
+#         if uid and x:
+#             c = Cart.objects.filter(id=uid)
+#             for c in c:
+#                 if Projects.objects.filter(id=c.project_id):
+#                     price = c.project.price
+#                     if x == "1":
+#                         c.quantity += 1
+#                     elif c.quantity > 1:
+#                         c.quantity -= 1
+#                     c.total = price * c.quantity
+#                 else:
+#                     price = c.services.sprice
+#                     if x == "1":
+#                         c.quantity += 1
+#                     elif c.quantity > 1:
+#                         c.quantity -= 1
+#                     c.total = price * c.quantity
+#                 c.save()
+    
+#     elif action == 'remove':
+#         if uid:
+#             c = Cart.objects.filter(id=uid)
+#             c.delete()
+#             context['msg'] = 'Item removed successfully!!'
+    
+#     # Calculate the total amount for all items in the cart for the specific session key
+#     total_amount = Cart.objects.filter(session_key=session_key).aggregate(Sum('total'))['total__sum']
+#     context['total_amount'] = total_amount if total_amount else 0
+    
+#     context['cart'] = Cart.objects.filter(session_key=session_key)
+    return render(request, 'cart.html', context)

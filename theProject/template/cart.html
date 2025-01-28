@@ -7,9 +7,8 @@
     {% include "header.html" %}
 
     <div class="container-fluid page-header py-5 mb-5">
-        {% for cart in cart %}
         <div class="container py-5">
-            <h1 class="display-3 text-white mb-3 animated slideInDown">Project</h1>
+            <h1 class="display-3 text-white mb-3 animated slideInDown">Cart</h1>
             <nav aria-label="breadcrumb animated slideInDown">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a class="text-white" href="/">Home</a></li>
@@ -17,10 +16,24 @@
                 </ol>
             </nav>
         </div>
-        {% endfor %}
     </div>
 
+
     <div class="container-fluid bg-light overflow-hidden my-5 px-lg-0">
+
+        {% if empty_cart %}
+            <p>{{ empty_cart }}</p>
+        {% endif %}
+
+        {% if msg %}
+            <p>{{ msg }}</p>
+        {% endif %}
+
+        {% if item %}
+            <p><a href="/all">{{ item }}</a> </p>
+        {% endif %}
+        
+
         <div class="container about px-lg-0">
             <div class="row g-0 mx-lg-0">
                 {% for cart in cart %}
@@ -43,7 +56,15 @@
                     <a href="/updateqty/1/{{cart.id}}"><button class="btn btn-danger">+</button></a>
                     <a href="/remove/{{cart.id}}">Remove</a>
                     
+                {% if items %}
+                    <p><a href="/all">{{ items }}</a> </p>
+                {% endif %}
+
+                {% if total_amount %}
+                    <p>{{total_amount}}</p>
+                {% endif %}
                 </div>
+
                 {% endfor %}
             </div>
         </div>
