@@ -55,16 +55,19 @@
                     <input type="text" value="{{cart.quantity}}">
                     <a href="/updateqty/1/{{cart.id}}"><button class="btn btn-danger">+</button></a>
                     <a href="/remove/{{cart.id}}">Remove</a>
-                    
+                
+
+                <a href="/initiate_payment/{{session_key}}">Pay</a>
+
                 {% if items %}
                     <p><a href="/all">{{ items }}</a> </p>
                 {% endif %}
 
                 {% if total_amount %}
-                    <p>{{total_amount}}</p>
+                    <p>Total amount:{{total_amount}}</p>
                 {% endif %}
-                </div>
 
+            </div>
                 {% endfor %}
             </div>
         </div>

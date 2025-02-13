@@ -96,7 +96,7 @@ def service_folder(request, service_id):
     order.delete()
     return response
 
-def initiate_payment(request,pid):
+def initiate_payment(request,pid=None):
     context={}
     context['projects']=Projects.objects.filter(id=int(pid))
     context['services']=Services.objects.filter(id=int(pid))
@@ -176,12 +176,11 @@ def cart(request,pid):
     else:
         context["msg"]="Something went wrong"
         
-    
-    
     context['items']="Add something more to your cart"
     total_amount=Cart.objects.filter(session_key=session_key).aggregate(Sum('total'))
     context['total_amount']=total_amount if total_amount['total__sum'] else 0
     context['cart']=Cart.objects.filter(session_key=request.session.session_key)
+    context['session_key']=session_key
     return render(request,'cart.html',context)
 
 def updateqty(request,x,uid):

@@ -86,6 +86,16 @@ WSGI_APPLICATION = 'theProject.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME':'theProject',
+#         'USER':'root',
+#         'HOST':'localhost',
+#         'PASSWORD':'root123',
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -93,6 +103,11 @@ DATABASES = {
         'USER':'root',
         'HOST':'localhost',
         'PASSWORD':'root123',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+            'socket': '/var/run/mysqld/mysqld.sock',
+        },
     }
 }
 
